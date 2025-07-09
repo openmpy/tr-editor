@@ -129,7 +129,7 @@ function App() {
   return (
     <div className="min-h-screen w-full flex flex-col bg-[#f6f6f6] relative overflow-x-hidden">
       {/* 헤더 */}
-      <header className="w-full min-w-0 h-[56px] bg-[#22c55e] flex items-center px-4 md:px-32 text-white text-xl font-bold shadow-sm z-10 justify-between">
+      <header className="w-full min-w-0 h-[56px] bg-[#22c55e] flex items-center px-4 md:px-32 text-white text-xl font-bold shadow-sm z-10 justify-between mb-4">
         <span>테일즈런너 광장 에디터</span>
         <a
           href="https://discord.gg/gejJjkvFpq"
@@ -140,7 +140,7 @@ function App() {
           디스코드
         </a>
       </header>
-      <div className="flex-1 flex flex-col items-center justify-center relative bg-[#f6f6f6] px-2 w-full min-w-0">
+      <div className="flex-1 flex flex-col items-center justify-center relative bg-[#f6f6f6] px-2 w-full min-w-0 my-4">
         <div className="flex flex-col lg:flex-row items-start justify-center w-full max-w-[1400px] mx-auto gap-4">
           {/* 배경 올리기 패널 - 왼쪽 */}
           <div className="order-2 lg:order-1 w-full lg:w-auto flex-shrink-0 lg:static relative z-20 mb-4 lg:mb-0">
@@ -508,7 +508,7 @@ function App() {
         </div>
       </div>
       {/* 푸터 */}
-      <footer className="w-full min-w-0 h-[44px] bg-white flex items-center justify-center text-xs text-[#888] font-medium z-10 border-t border-[#e5e7eb]">
+      <footer className="w-full min-w-0 h-[44px] bg-white flex items-center justify-center text-xs text-[#888] font-medium z-10 border-t border-[#e5e7eb] mt-4">
         © 2025 레디스. All rights reserved.
       </footer>
     </div>
