@@ -141,10 +141,10 @@ function App() {
         </a>
       </header>
       <div className="flex-1 flex flex-col items-center justify-center relative bg-[#f6f6f6] px-2 w-full min-w-0 my-4">
-        <div className="flex flex-col md:flex-row items-start justify-center w-full max-w-[1400px] mx-auto gap-4">
+        <div className="flex flex-col lg:flex-row items-start justify-center w-full max-w-[1400px] mx-auto gap-4">
           {/* 배경 올리기 패널 - 왼쪽 */}
-          <div className="order-2 md:order-1 w-full md:w-[320px] max-w-[400px] flex-shrink-0 md:static relative z-20 mb-4 md:mb-0">
-            <div className="bg-white border border-[#22c55e] p-6 w-full flex flex-col gap-4">
+          <div className="order-2 lg:order-1 w-full lg:w-auto flex-shrink-0 lg:static relative z-20 mb-4 lg:mb-0">
+            <div className="bg-white border border-[#22c55e] p-6 min-w-[260px] flex flex-col gap-4">
               <div className="text-lg font-bold text-[#22c55e] mb-1">
                 배경화면 올리기
               </div>
@@ -251,8 +251,8 @@ function App() {
             </div>
           </div>
           {/* 캔버스 영역: 중앙 */}
-          <div className="order-1 md:order-2 w-full max-w-[902px] mx-auto flex-shrink-0">
-            <div className="w-full max-w-[900px] h-auto min-h-[400px] overflow-hidden border border-[#22c55e] bg-white flex flex-col">
+          <div className="order-1 lg:order-2 w-full max-w-[902px] mx-auto flex-shrink-0">
+            <div className="w-full h-[702px] overflow-hidden border border-[#22c55e] bg-white flex flex-col">
               <div className="w-full h-[36px] bg-[#22c55e] flex items-center justify-end pr-4">
                 <button
                   onClick={handleCapture}
@@ -374,8 +374,8 @@ function App() {
             </div>
           </div>
           {/* 위젯 패널 - 오른쪽 */}
-          <div className="order-3 w-full md:w-[320px] max-w-[400px] flex-shrink-0 md:static relative z-20">
-            <div className="bg-white border border-[#22c55e] p-6 w-full flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
+          <div className="order-3 w-full lg:w-auto flex-shrink-0 lg:static relative z-20">
+            <div className="bg-white border border-[#22c55e] p-6 min-w-[260px] flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
               <div className="text-lg font-bold text-[#22c55e] mb-1">
                 이미지 추가
               </div>
