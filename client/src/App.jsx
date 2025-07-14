@@ -625,7 +625,7 @@ function App() {
       {/* --- 동영상 → GIF 변환 모달 --- */}
       {showGifModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">
-          <div className="bg-white border border-[#22c55e] rounded-lg p-8 min-w-[320px] max-w-[90vw] flex flex-col gap-4 relative">
+          <div className="bg-white border border-[#22c55e] rounded-lg p-8 min-w-[320px] max-w-[90vw] flex flex-col gap-4 relative max-h-[90vh] overflow-y-auto">
             <button
               className="absolute top-2 right-2 text-[#22c55e] text-xl font-bold hover:text-red-500"
               onClick={() => setShowGifModal(false)}
