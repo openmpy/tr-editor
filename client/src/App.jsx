@@ -210,7 +210,7 @@ function App() {
   return (
     <div className="min-h-screen w-full flex flex-col bg-[#f6f6f6] relative overflow-x-hidden">
       {/* 헤더 */}
-      <header className="w-full min-w-0 h-[56px] bg-[#22c55e] flex items-center px-2 sm:px-4 md:px-12 lg:px-32 text-white text-lg md:text-xl font-bold shadow-sm z-10 justify-between mb-4">
+      <header className="w-full min-w-0 h-[56px] bg-[#22c55e] flex items-center px-4 md:px-32 text-white text-xl font-bold shadow-sm z-10 justify-between mb-4">
         <span>테일즈런너 광장 에디터</span>
         <div className="flex items-center">
           <a
@@ -240,7 +240,7 @@ function App() {
         </div>
       </header>
       <div className="flex-1 flex flex-col items-center justify-center relative bg-[#f6f6f6] px-2 w-full min-w-0 my-4">
-        <div className="flex flex-col lg:flex-row items-start justify-center w-full max-w-[98vw] sm:max-w-[95vw] md:max-w-[900px] lg:max-w-[1100px] xl:max-w-[1400px] mx-auto gap-4">
+        <div className="flex flex-col lg:flex-row items-start justify-center w-full max-w-[1400px] mx-auto gap-4">
           {/* 배경 올리기 패널 - 왼쪽 */}
           <div className="order-2 lg:order-1 w-full lg:w-auto flex-shrink-0 lg:static relative z-20 mb-4 lg:mb-0">
             <div className="bg-white border border-[#22c55e] p-6 min-w-[260px] flex flex-col gap-4">
@@ -350,7 +350,7 @@ function App() {
             </div>
           </div>
           {/* 캔버스 영역: 중앙 */}
-          <div className="order-1 lg:order-2 w-full max-w-[98vw] sm:max-w-[95vw] md:max-w-[900px] lg:max-w-[902px] mx-auto flex-shrink-0">
+          <div className="order-1 lg:order-2 w-full max-w-[902px] mx-auto flex-shrink-0">
             <div className="w-full h-[702px] overflow-hidden border border-[#22c55e] bg-white flex flex-col">
               <div className="w-full h-[36px] bg-[#22c55e] flex items-center justify-end pr-4 gap-2">
                 <button
