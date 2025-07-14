@@ -1,3 +1,4 @@
+import gifshot from "gifshot";
 import html2canvas from "html2canvas";
 import React, { useRef, useState } from "react";
 import "./App.css";
@@ -30,6 +31,22 @@ function App() {
   ];
   const [widgetOpenIdx, setWidgetOpenIdx] = useState(null); // 드롭다운 오픈 인덱스
   const [hideGreenBlocks, setHideGreenBlocks] = useState(false);
+
+  // gifshot 관련 상태
+  const [mp4File, setMp4File] = useState(null);
+  const [gifUrl, setGifUrl] = useState(null);
+  const [isConverting, setIsConverting] = useState(false);
+
+  // 모달 상태
+  const [showGifModal, setShowGifModal] = useState(false);
+
+  // 파일 input ref (모달용)
+  const videoInputRef = useRef(null);
+
+  // 프레임 수 상태
+  const [numFrames, setNumFrames] = useState(20);
+  // 프레임 간 시간 상태
+  const [frameDuration, setFrameDuration] = useState(1);
 
   const handleCapture = async () => {
     if (!captureRef.current) return;
@@ -126,19 +143,101 @@ function App() {
     });
   };
 
+  // mp4 파일 업로드 핸들러
+  const handleMp4Change = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setMp4File(file);
+    setGifUrl(null);
+  };
+
+  // 프레임 입력 핸들러
+  const handleNumFramesChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    setNumFrames(value === "" ? "" : Math.max(1, Number(value)));
+  };
+
+  // 프레임 간 시간 입력 핸들러
+  const handleFrameDurationChange = (e) => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    setFrameDuration(value === "" ? "" : Math.max(1, Number(value)));
+  };
+
+  // mp4 → gif 변환 핸들러
+  const handleConvertToGif = () => {
+    if (!mp4File) return;
+    setIsConverting(true);
+    const fileUrl = URL.createObjectURL(mp4File);
+    const video = document.createElement("video");
+    video.src = fileUrl;
+    video.onloadedmetadata = () => {
+      const width = video.videoWidth;
+      const height = video.videoHeight;
+      gifshot.createGIF(
+        {
+          video: [fileUrl],
+          gifWidth: width,
+          gifHeight: height,
+          numFrames: Number(numFrames) || 20,
+          frameDuration: Math.round(Number(frameDuration) / 10) || 1,
+          progressCallback: () => {},
+        },
+        function (obj) {
+          setIsConverting(false);
+          if (!obj.error) {
+            setGifUrl(obj.image);
+          } else {
+            alert("GIF 변환에 실패했습니다.");
+          }
+          URL.revokeObjectURL(fileUrl);
+        }
+      );
+    };
+  };
+
+  // gif 저장 핸들러
+  const handleSaveGif = () => {
+    if (!gifUrl) return;
+    const link = document.createElement("a");
+    link.href = gifUrl;
+    link.download = "converted.gif";
+    link.click();
+  };
+
+  // 파일명 표시용
+  const getFileName = () => (mp4File ? mp4File.name : "선택된 파일 없음");
+
   return (
     <div className="min-h-screen w-full flex flex-col bg-[#f6f6f6] relative overflow-x-hidden">
       {/* 헤더 */}
       <header className="w-full min-w-0 h-[56px] bg-[#22c55e] flex items-center px-4 md:px-32 text-white text-xl font-bold shadow-sm z-10 justify-between mb-4">
         <span>테일즈런너 광장 에디터</span>
-        <a
-          href="https://discord.gg/gejJjkvFpq"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-[#5865F2] text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-[#4752c4] border border-[#5865F2] transition"
-        >
-          디스코드
-        </a>
+        <div className="flex items-center">
+          <a
+            href="https://forms.gle/ET1AwmYa8vTR5oGg6"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#6b7280] text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-[#374151] border border-[#6b7280] transition mr-2"
+          >
+            건의하기
+          </a>
+          <a
+            href="https://forms.gle/Q8V3fCxjYyYYS66M8"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#ef4444] text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-[#dc2626] border border-[#ef4444] transition mr-2"
+          >
+            버그제보
+          </a>
+          <a
+            href="https://discord.gg/gejJjkvFpq"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#5865F2] text-white px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-[#4752c4] border border-[#5865F2] transition"
+          >
+            디스코드
+          </a>
+        </div>
       </header>
       <div className="flex-1 flex flex-col items-center justify-center relative bg-[#f6f6f6] px-2 w-full min-w-0 my-4">
         <div className="flex flex-col lg:flex-row items-start justify-center w-full max-w-[1400px] mx-auto gap-4">
@@ -253,7 +352,19 @@ function App() {
           {/* 캔버스 영역: 중앙 */}
           <div className="order-1 lg:order-2 w-full max-w-[902px] mx-auto flex-shrink-0">
             <div className="w-full h-[702px] overflow-hidden border border-[#22c55e] bg-white flex flex-col">
-              <div className="w-full h-[36px] bg-[#22c55e] flex items-center justify-end pr-4">
+              <div className="w-full h-[36px] bg-[#22c55e] flex items-center justify-end pr-4 gap-2">
+                <button
+                  onClick={() => setHideGreenBlocks((prev) => !prev)}
+                  className="bg-white text-[#222] px-2 py-0.5 text-sm rounded hover:bg-[#f0fdf4] border border-[#22c55e]"
+                >
+                  {hideGreenBlocks ? "블록 ON" : "블록 OFF"}
+                </button>
+                <button
+                  onClick={() => setShowGifModal(true)}
+                  className="bg-white text-[#222] px-2 py-0.5 text-sm rounded hover:bg-[#f0fdf4] border border-[#22c55e]"
+                >
+                  동영상 → GIF 변환
+                </button>
                 <button
                   onClick={handleCapture}
                   className="bg-white text-[#222] px-2 py-0.5 text-sm rounded hover:bg-[#f0fdf4] border border-[#22c55e]"
@@ -511,6 +622,163 @@ function App() {
       <footer className="w-full min-w-0 h-[44px] bg-white flex items-center justify-center text-xs text-[#888] font-medium z-10 border-t border-[#e5e7eb] mt-4">
         © 2025 레디스. All rights reserved.
       </footer>
+      {/* --- 동영상 → GIF 변환 모달 --- */}
+      {showGifModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30">
+          <div className="bg-white border border-[#22c55e] rounded-lg p-8 min-w-[320px] max-w-[90vw] flex flex-col gap-4 relative">
+            <button
+              className="absolute top-2 right-2 text-[#22c55e] text-xl font-bold hover:text-red-500"
+              onClick={() => setShowGifModal(false)}
+            >
+              ×
+            </button>
+            <div className="text-lg font-bold text-[#22c55e] mb-1">
+              동영상 → GIF
+            </div>
+            <div className="bg-[#f6fdf9] border border-[#bbf7d0] rounded-lg px-5 py-4 mb-4 text-sm text-gray-800">
+              <div className="font-bold text-[#16a34a] text-base mb-2">
+                안내문
+              </div>
+              <div className="space-y-1">
+                <div>
+                  <b>프레임 수</b>: GIF로 만들 프레임 개수입니다. 값이 클수록
+                  부드럽지만 용량이 커집니다.
+                </div>
+                <div>
+                  <b>프레임 간 시간(ms)</b>: 한 프레임이 표시되는
+                  시간(밀리초)입니다. 값이 클수록 느리게 재생됩니다.
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 mb-2">
+              <input
+                id="video-upload"
+                type="file"
+                accept="video/mp4,video/quicktime"
+                onChange={handleMp4Change}
+                className="hidden"
+                ref={videoInputRef}
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  videoInputRef.current && videoInputRef.current.click()
+                }
+                className="bg-[#22c55e] text-white px-2 py-1 text-xs rounded hover:bg-[#16a34a] transition"
+              >
+                파일 선택
+              </button>
+              <span className="text-xs text-gray-700 truncate flex-1">
+                {getFileName()}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 mb-2">
+              <label
+                htmlFor="num-frames"
+                className="text-xs font-semibold text-black"
+              >
+                프레임 수
+              </label>
+              <input
+                id="num-frames"
+                type="text"
+                value={numFrames}
+                onChange={handleNumFramesChange}
+                className="w-16 text-xs px-2 py-1 rounded border border-[#22c55e] focus:outline-none focus:ring-2 focus:ring-[#bbf7d0]"
+                min={1}
+                inputMode="numeric"
+                pattern="[0-9]*"
+              />
+            </div>
+            <div className="flex items-center gap-2 mb-2">
+              <label
+                htmlFor="frame-duration"
+                className="text-xs font-semibold text-black"
+              >
+                프레임 간 시간(ms)
+              </label>
+              <input
+                id="frame-duration"
+                type="text"
+                value={frameDuration}
+                onChange={handleFrameDurationChange}
+                className="w-20 text-xs px-2 py-1 rounded border border-[#22c55e] focus:outline-none focus:ring-2 focus:ring-[#bbf7d0]"
+                min={1}
+                inputMode="numeric"
+                pattern="[0-9]*"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleConvertToGif}
+              disabled={!mp4File || isConverting}
+              className="flex items-center justify-center gap-2 bg-[#22c55e] text-white px-3 py-2 text-sm rounded-lg hover:bg-[#16a34a] transition disabled:opacity-50 disabled:cursor-not-allowed mb-2"
+            >
+              {isConverting ? "변환 중..." : "GIF로 변환"}
+            </button>
+            {gifUrl && (
+              <div className="flex flex-col items-center gap-2 mt-2 w-full">
+                <img
+                  src={gifUrl}
+                  alt="gif 미리보기"
+                  className="border rounded object-contain w-auto max-w-full max-h-48 mx-auto"
+                  id="gif-preview-img"
+                />
+                {/* 이미지 정보 표시 */}
+                <GifInfo gifUrl={gifUrl} />
+                <button
+                  type="button"
+                  onClick={handleSaveGif}
+                  className="bg-[#22c55e] text-white px-3 py-1 rounded hover:bg-[#16a34a] text-xs mt-2"
+                >
+                  GIF 저장
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// GIF 정보 컴포넌트
+function GifInfo({ gifUrl }) {
+  const [info, setInfo] = React.useState({
+    width: null,
+    height: null,
+    size: null,
+  });
+
+  React.useEffect(() => {
+    if (!gifUrl) return;
+    // 이미지 크기
+    const img = new window.Image();
+    img.onload = function () {
+      // 파일 용량 계산
+      fetch(gifUrl)
+        .then((res) => res.blob())
+        .then((blob) => {
+          setInfo({
+            width: img.width,
+            height: img.height,
+            size: (blob.size / 1024).toFixed(1), // KB 단위
+          });
+        });
+    };
+    img.src = gifUrl;
+  }, [gifUrl]);
+
+  if (!info.width || !info.height || !info.size) return null;
+  // MB 단위로 변환 (소수점 2자리)
+  const sizeMB = (info.size / 1024).toFixed(2);
+  return (
+    <div className="text-xs text-gray-700 mt-1">
+      크기:{" "}
+      <b>
+        {info.width} x {info.height}
+      </b>{" "}
+      px &nbsp; | &nbsp; 용량: <b>{sizeMB}</b> MB
     </div>
   );
 }
