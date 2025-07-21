@@ -466,8 +466,8 @@ function App() {
                         hideGreenBlocks ? "hidden" : ""
                       }`}
                     >
-                      <div className="w-full rounded-lg bg-[#22c55e] h-[236px]"></div>
-                      <div className="w-full rounded-lg bg-[#22c55e] h-[123px]"></div>
+                      <div className="w-full rounded-lg bg-[#22c55e] h-[236px] opacity-50"></div>
+                      <div className="w-full rounded-lg bg-[#22c55e] h-[123px] opacity-50"></div>
                     </div>
 
                     {/* 오른쪽 영역 */}
@@ -476,8 +476,8 @@ function App() {
                         hideGreenBlocks ? "hidden" : ""
                       }`}
                     >
-                      <div className="w-full bg-[#22c55e] mb-2 rounded-lg h-[46px]"></div>
-                      <div className="w-full bg-[#22c55e] rounded-lg h-[calc(100%_-_54px)]"></div>
+                      <div className="w-full bg-[#22c55e] mb-2 rounded-lg h-[46px] opacity-50"></div>
+                      <div className="w-full bg-[#22c55e] rounded-lg h-[calc(100%_-_54px)] opacity-50"></div>
                     </div>
                   </div>
                 </div>
